@@ -24,16 +24,34 @@ def STT(speech, language):
             )
             result = transcription.text
             return result + " 한국어로 답변해 주세요."
-        else:
+        elif language == "en":
             translation = client.audio.translations.create(
                 model="whisper-1", 
                 file=audio_file
             )
             result = translation.text
-            if language == "en":
-                return result + " and answer in english."
-            elif language == "th":
-                return result + " และตอบเป็นภาษาไทย"
+            return result + " and answer in english."
+        elif language == "th":
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " และตอบเป็นภาษาไทย"
+        elif language == "vi":
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " và trả lời bằng tiếng Việt."
+        elif language == "ja":
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " 日本語で答えてください。"
 
     os.remove(filename)
 
@@ -47,13 +65,16 @@ def ask_gpt(prompt, model, language):
                 message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in english"
             elif language == "th":
                 message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in thai"
+            elif language == "vi":
+                message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in vietnamese"
+            elif language == "ja":
+                message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in japanese"
 
     response = client.chat.completions.create(
         model=model, 
         messages=prompt
     )
     return response.choices[0].message.content
-
 
 def TTS(text):
     filename = "output.mp3"
@@ -75,7 +96,6 @@ def TTS(text):
         st.markdown(md, unsafe_allow_html=True)
 
     os.remove(filename)
-
 
 def main():
     st.set_page_config(
@@ -111,7 +131,7 @@ def main():
 
     with st.sidebar:
         model = st.radio(label="GPT 모델", options=["gpt-3.5-turbo", "gpt-4o", "gpt-4-turbo"])
-        language = st.radio(label="언어", options=["ko", "en", "th"])
+        language = st.radio(label="언어", options=["ko", "en", "th", "vi", "ja"])
 
         st.markdown("---")
 
