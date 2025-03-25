@@ -13,7 +13,7 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 def STT(speech, language):
-    filename='input.mp3'
+    filename = 'input.mp3'
     speech.export(filename, format="mp3")
 
     with open(filename, "rb") as audio_file:
@@ -52,6 +52,34 @@ def STT(speech, language):
             )
             result = translation.text
             return result + " 日本語で答えてください。"
+        elif language == "zh":  # 중국어 추가
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " 用中文回答。"
+        elif language == "ru":  # 러시아어 추가
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " Ответьте на русском."
+        elif language == "fr":  # 프랑스어 추가
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " Répondez en français."
+        elif language == "de":  # 독일어 추가
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " Antworten Sie auf Deutsch."
 
     os.remove(filename)
 
@@ -69,6 +97,14 @@ def ask_gpt(prompt, model, language):
                 message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in vietnamese"
             elif language == "ja":
                 message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in japanese"
+            elif language == "zh":  # 중국어 추가
+                message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in chinese"
+            elif language == "ru":  # 러시아어 추가
+                message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in russian"
+            elif language == "fr":  # 프랑스어 추가
+                message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in french"
+            elif language == "de":  # 독일어 추가
+                message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in german"
 
     response = client.chat.completions.create(
         model=model, 
@@ -131,7 +167,7 @@ def main():
 
     with st.sidebar:
         model = st.radio(label="GPT 모델", options=["gpt-3.5-turbo", "gpt-4o", "gpt-4-turbo"])
-        language = st.radio(label="언어", options=["ko", "en", "th", "vi", "ja"])
+        language = st.radio(label="언어", options=["ko", "en", "th", "vi", "ja", "zh", "ru", "fr", "de"])  # 프랑스어, 독일어 추가
 
         st.markdown("---")
 
