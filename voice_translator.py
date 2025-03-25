@@ -80,6 +80,20 @@ def STT(speech, language):
             )
             result = translation.text
             return result + " Antworten Sie auf Deutsch."
+        elif language == "lo":  # 라오스어 추가
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " ກະລຸນາຕອບໃນພາສາລາວ."
+        elif language == "id":  # 인도네시아어 추가
+            translation = client.audio.translations.create(
+                model="whisper-1", 
+                file=audio_file
+            )
+            result = translation.text
+            return result + " Tolong jawab dalam bahasa Indonesia."
 
     os.remove(filename)
 
@@ -105,6 +119,10 @@ def ask_gpt(prompt, model, language):
                 message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in french"
             elif language == "de":  # 독일어 추가
                 message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in german"
+            elif language == "lo":  # 라오스어 추가
+                message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in lao"
+            elif language == "id":  # 인도네시아어 추가
+                message['content'] = "You are a thoughtful assistant. Respond to all input in 25 words and answer in indonesian"
 
     response = client.chat.completions.create(
         model=model, 
@@ -167,7 +185,7 @@ def main():
 
     with st.sidebar:
         model = st.radio(label="GPT 모델", options=["gpt-3.5-turbo", "gpt-4o", "gpt-4-turbo"])
-        language = st.radio(label="언어", options=["ko", "en", "th", "vi", "ja", "zh", "ru", "fr", "de"])  # 프랑스어, 독일어 추가
+        language = st.radio(label="언어", options=["ko", "en", "th", "vi", "ja", "zh", "ru", "fr", "de", "lo", "id"])  # 라오스어, 인도네시아어 추가
 
         st.markdown("---")
 
